@@ -42,6 +42,7 @@ export interface MyViewPagerProps {
   onSwipeEnd?: () => void;
   onPagerScroll?: (position: number, offset: number) => void;
   initialIndex?: number;
+  isAnimated: boolean;
 }
 
 class MyViewPager extends React.PureComponent<MyViewPagerProps> {
@@ -57,14 +58,17 @@ class MyViewPager extends React.PureComponent<MyViewPagerProps> {
   sceneRefs: { [key: number]: any };
   visibleSceneIndexs: Array<number>;
   selectedIndex: number;
+  isAnimated: boolean
 
   constructor(props: MyViewPagerProps) {
     super(props);
-    const { initialIndex = 0 } = props;
+    const { initialIndex = 0, isAnimated = true } = props;
     this.viewPagerRef = React.createRef<ViewPager>();
     this.sceneRefs = {};
     this.visibleSceneIndexs = [initialIndex];
     this.selectedIndex = initialIndex;
+    this.isAnimated = isAnimated
+
   }
 
   componentWillUnmount() {
@@ -77,12 +81,18 @@ class MyViewPager extends React.PureComponent<MyViewPagerProps> {
       return;
     }
     if (this.viewPagerRef.current) {
-      const animated = Math.abs(index - this.selectedIndex) === 1;
-      if (animated) {
+      if (this.isAnimated) {
         this.viewPagerRef.current.setPage(index);
       } else {
         this.viewPagerRef.current.setPageWithoutAnimation(index);
       }
+
+      // const animated = Math.abs(index - this.selectedIndex) === 1;
+      // if (animated) {
+      //   this.viewPagerRef.current.setPage(index);
+      // } else {
+      //   this.viewPagerRef.current.setPageWithoutAnimation(index);
+      // }
     }
 
     this.selectedIndex = index;
@@ -124,7 +134,7 @@ class MyViewPager extends React.PureComponent<MyViewPagerProps> {
           if (!this.visibleSceneIndexs.includes(position)) {
             this.sceneRefs[position] && this.sceneRefs[position].onVisibilityLoad();
           }
-          onIndexChange && onIndexChange(position, () => {});
+          onIndexChange && onIndexChange(position, () => { });
         }}
         onPageScrollStateChanged={({ nativeEvent: { pageScrollState } }) => {
           // console.warn('onPageScrollStateChanged', pageScrollState);

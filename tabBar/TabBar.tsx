@@ -112,7 +112,9 @@ interface TabBarProps extends Omit<TabItemProps, 'style' | 'onTabLayout' | 'onLa
   indicatorMode?: 'tab' | 'label';
   indicatorWidthRatio?: number;
   tabMode?: 'scrollable' | 'fixed';
-  onSwipe?: (index: any) => void
+  onSwipe?: (index: any) => void;
+  sliderAnimate: boolean;
+  // tabBarLabelCus: { activeColor: string, color: string }
 
 }
 
@@ -129,7 +131,7 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
     indicatorWidthRatio: 1,
     tabMode: 'fixed',
   };
-
+  sliderAnimate: boolean;
   indexValue: Animated.Value;
   indicatorWidthValue: Animated.Value;
   indicatorLeftValue: Animated.Value;
@@ -143,6 +145,7 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
   timer: NodeJS.Timeout | null;
   selectedIndex: number;
   pressTime: number;
+  // tabBarLabelCus: { activeColor: string, color: string };
 
 
   constructor(props: TabBarProps) {
@@ -150,6 +153,7 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
     this.indexValue = new Animated.Value(0);
     this.indicatorWidthValue = new Animated.Value(0);
     this.indicatorLeftValue = new Animated.Value(0);
+    //@ts-ignore
     this.labelColorValue = new Animated.Value(processColor('#333333'));
     this.labelScaleValue = new Animated.Value(1.5);
     this.scrollView = React.createRef<ScrollView>();
@@ -159,7 +163,8 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
     this.timer = null;
     this.selectedIndex = 0;
     this.pressTime = 0;
-
+    this.sliderAnimate = props.sliderAnimate;
+    // this.tabBarLabelCus = props.tabBarLabelCus
     this.state = {
       selectedIndex: 0,
     };
@@ -215,11 +220,14 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
     let widthValue = width * ratio;
 
     if (indicatorMode === 'label') {
-      leftValue = x + (width - labelWidth * ratio) / 2;
+      // leftValue = x + (width - labelWidth * ratio) / 2;
+      leftValue = x + width / 2 - 10;//固定下标宽度
       widthValue = labelWidth * ratio;
     }
 
-    if (animated) {
+    if (this.sliderAnimate) {
+      // if (animated) {
+      //sliderAnimate
       // animations.push(
       //   Animated.spring(this.indexValue, { toValue: index, friction: 12, tension: 40, useNativeDriver: false }),
       // );
@@ -267,18 +275,21 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
       animations.push(
         Animated.timing(this.indexValue, {
           toValue: index,
+          duration: 0,
           useNativeDriver: false,
         }),
       );
       animations.push(
         Animated.timing(this.indicatorLeftValue, {
           toValue: leftValue,
+          duration: 0,
           useNativeDriver: false,
         }),
       );
       animations.push(
         Animated.timing(this.indicatorWidthValue, {
           toValue: widthValue,
+          duration: 0,
           useNativeDriver: false,
         }),
       );
@@ -328,6 +339,7 @@ class TabBar extends React.PureComponent<TabBarProps, TabBarState> {
       onTabPress,
       onTabChange,
       tabMode,
+      // tabBarLabelCus
     } = this.props;
     const { selectedIndex } = this.state;
     return (

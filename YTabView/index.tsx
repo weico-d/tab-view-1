@@ -77,16 +77,38 @@ export default function YTabView(props: { config: YTabConfigType, children?: Arr
             customStyle={customStyle ?? defaultCusStyle}
             initialIndex={_defaultIndex}
             lazy={data.lazy}
+            tabBarIndicatorStyle={{
+                width: (data.type !== 'secondary' || data.showSlider) ? 20 : 0,
+                marginBottom: data.sliderBottom,
+                height: data.customStyle ? data.customStyle.sliderHeight : defaultCusStyle.sliderHeight,
+                borderRadius: data.customStyle ? data.customStyle.sliderBorderRadius : defaultCusStyle.sliderBorderRadius,
+                backgroundColor: data.customStyle ? data.customStyle.sliderColor : defaultCusStyle.sliderColor
+            }}
+            tabBarStyle={{
+                // padding: data.align === 'left' ? 12 : 0,
+                margin: data.align === 'left' ? 8 : 0,
+                backgroundColor: data.customStyle ? data.customStyle.tabBarBgColor : defaultCusStyle.tabBarBgColor
+            }}
+
+            tabBarLabelStyle={{
+                //type === 'primary' | 'primaryHalf' | 'secondary' ...
+                // color: data.customStyle ? data.customStyle.textColor : defaultCusStyle.textColor,
+                fontSize: data.customStyle ? data.customStyle.textSize : defaultCusStyle.textSize,
+                lineHeight: data.customStyle ? data.customStyle.textHeight : defaultCusStyle.textHeight
+            }}
+            tabBarActiveColor={data.customStyle ? data.customStyle.textActiveColor : defaultCusStyle.textActiveColor}
             showSlider={data.showSlider}
-            tabBarStyle={data.navItemStyle ?? {}}
+            tabBarTabStyle={data.navItemStyle}
             tabBarPosition={data.position}
             renderLazyPlaceholder={() => data.renderLazyPlaceholder ? data.renderLazyPlaceholder() : null}
             swipeEnabled={data.swipeEnabled}
             lazyPreloadDistance={data.lazyPreloadDistance}
             navigationState={navTabStatus}
-            sliderBottom={data.sliderBottom}
             renderScene={(props) => scenes[props.index]()}
             onIndexChange={props.config.onIndexChange}
+            onTabBarPress={props.config.onTabBarPress}
+            onSwipe={props.config.onSwipe}
+            tabBarIndicatorMode={'label'}
             tabBarMode={data.align === 'left' ? 'scrollable' : 'fixed'}
             style={{ flex: 1 }}
         />

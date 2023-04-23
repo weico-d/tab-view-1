@@ -6,7 +6,7 @@ import { YTabViewStyle } from './YTabView/style';
 
 export default function App() {
 
-  const onIndexChange = (index: number) => { }
+  const onIndexChange = (index: number) => { console.log('tab change：' + index) }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />

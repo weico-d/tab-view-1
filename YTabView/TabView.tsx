@@ -59,12 +59,13 @@ interface TabViewProps {
   onPagerScroll?: (position: number, offset: number) => void;
   initialIndex?: number;
   onSwipe?: (index: any) => void;//tabbar scroll
-  isAnimated?: boolean;
-  sliderAnimate?: boolean;
+  isAnimated: boolean;
+  sliderAnimate: boolean;
   customStyle: yTabCustomeType;
   type: 'primary' | 'primaryHalf' | 'secondary';
   showSlider: boolean;
-  sliderBottom: number;
+  // tabBarLabelCus: { activeColor: string, color: string }
+
 
 }
 
@@ -113,7 +114,7 @@ class TabView extends React.PureComponent<TabViewProps> {
       tabBarIndicatorMode,
       tabBarIndicatorWidthRatio,
       tabBarMode,
-
+      isAnimated,
       navigationState,
       onIndexChange,
       renderScene,
@@ -127,6 +128,8 @@ class TabView extends React.PureComponent<TabViewProps> {
       onSwipeEnd,
       onPagerScroll,
       initialIndex,
+      sliderAnimate,
+      // tabBarLabelCus
     } = this.props;
     const renderTabBarComponent = () => {
       if (renderTabBar) {
@@ -141,7 +144,8 @@ class TabView extends React.PureComponent<TabViewProps> {
       } else {
         return (
           <TabBar
-
+            // tabBarLabelCus={tabBarLabelCus}
+            sliderAnimate={sliderAnimate}
             ref={this.tabBarRef}
             routes={navigationState}
             style={tabBarStyle}
@@ -181,6 +185,7 @@ class TabView extends React.PureComponent<TabViewProps> {
       <View style={[styles.container, style]}>
         {tabBarPosition === 'top' && renderTabBarComponent()}
         <ViewPager
+          isAnimated={isAnimated}
           ref={this.viewPagerRef}
           routes={navigationState}
           sceneContainerStyle={sceneContainerStyle}
